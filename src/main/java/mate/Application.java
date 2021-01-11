@@ -15,10 +15,8 @@ public class Application {
         Manufacturer manufacturer = new Manufacturer("BMW", "Germany");
         Manufacturer manufacturer1 = new Manufacturer("Mercedes", "Germany");
         Manufacturer manufacturer2 = new Manufacturer("Mitsubishi", "Japan");
-
         serviceManufacturer.add(manufacturer);
         serviceManufacturer.add(manufacturer2);
-
         serviceManufacturer.update(1L, manufacturer1);
         serviceManufacturer.deleteById(1L);
         serviceManufacturer.add(manufacturer);
@@ -26,6 +24,5 @@ public class Application {
         List<Manufacturer> all = serviceManufacturer.getAll();
         System.out.println(all.toString());
         System.out.println();
-
     }
 }
