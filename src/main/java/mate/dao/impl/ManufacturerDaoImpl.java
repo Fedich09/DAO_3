@@ -1,12 +1,10 @@
 package mate.dao.impl;
 
-
+import java.util.List;
+import java.util.Optional;
 import mate.db.Storage;
 import mate.lib.Dao;
 import mate.model.Manufacturer;
-
-import java.util.List;
-import java.util.Optional;
 
 @Dao
 public class ManufacturerDaoImpl implements mate.dao.ManufacturerDao {
@@ -25,8 +23,10 @@ public class ManufacturerDaoImpl implements mate.dao.ManufacturerDao {
 
     @Override
     public Manufacturer update(Long id, Manufacturer manufacturer) {
-        Storage.manufacturers.set(id.intValue(), manufacturer);
-        return manufacturer;
+        Manufacturer old = Storage.manufacturers.get(id.intValue());
+        manufacturer.setId(id);
+        Storage.manufacturers.set(id.intValue() - 1, manufacturer);
+        return old;
     }
 
     @Override

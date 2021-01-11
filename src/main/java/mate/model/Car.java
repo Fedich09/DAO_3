@@ -17,4 +17,15 @@ public class Car {
         this.manufacturer = manufacturer;
         drivers = new ArrayList<>();
     }
+
+    @Override
+    public String toString() {
+        return "Car{" + "id="
+                + id + ", model='"
+                + model + '\''
+                + ", manufacturer="
+                + manufacturer
+                + ", drivers="
+                + drivers + '}';
+    }
 }
