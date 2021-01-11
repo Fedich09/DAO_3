@@ -1,10 +1,9 @@
 package mate;
 
+import java.util.List;
 import mate.lib.Injector;
 import mate.model.Manufacturer;
 import mate.service.impl.ManufacturerService;
-
-import java.util.List;
 
 public class Application {
     private static Injector injector = Injector
@@ -16,9 +15,10 @@ public class Application {
         Manufacturer manufacturer = new Manufacturer("BMW", "Germany");
         Manufacturer manufacturer1 = new Manufacturer("Mercedes", "Germany");
         Manufacturer manufacturer2 = new Manufacturer("Mitsubishi", "Japan");
+
         serviceManufacturer.add(manufacturer);
         serviceManufacturer.add(manufacturer2);
-        System.out.println(serviceManufacturer.getById(1L));
+
         serviceManufacturer.update(1L, manufacturer1);
         serviceManufacturer.deleteById(1L);
         serviceManufacturer.add(manufacturer);
@@ -26,7 +26,6 @@ public class Application {
         List<Manufacturer> all = serviceManufacturer.getAll();
         System.out.println(all.toString());
         System.out.println();
-
 
     }
 }
