@@ -1,13 +1,14 @@
 package mate.service;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Service<T> {
     T add(T object);
 
-    T getById(Long t);
+    Optional<T> getById(Long t);
 
-    T update(T object);
+    T update(Long id, T object);
 
     boolean deleteById(Long id);
 

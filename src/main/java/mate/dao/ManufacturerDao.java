@@ -2,5 +2,5 @@ package mate.dao;
 
 import mate.model.Manufacturer;
 
-public interface ManufacturerDao extends Dao<Manufacturer> {
+public interface ManufacturerDao extends Dao<Manufacturer>{
 }

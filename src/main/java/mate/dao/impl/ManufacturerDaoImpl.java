@@ -1,10 +1,12 @@
 package mate.dao.impl;
 
-import java.util.List;
-import java.util.Optional;
+
 import mate.db.Storage;
 import mate.lib.Dao;
 import mate.model.Manufacturer;
+
+import java.util.List;
+import java.util.Optional;
 
 @Dao
 public class ManufacturerDaoImpl implements mate.dao.ManufacturerDao {
@@ -22,23 +24,31 @@ public class ManufacturerDaoImpl implements mate.dao.ManufacturerDao {
     }
 
     @Override
-    public Manufacturer update(Manufacturer manufacturer) {
-        for (int i = 0; i < Storage.manufacturers.size(); i++) {
-            if (manufacturer.getId().equals(Storage.manufacturers.get(i).getId())) {
-                Storage.manufacturers.set(i, manufacturer);
-            }
-        }
+    public Manufacturer update(Long id, Manufacturer manufacturer) {
+        Storage.manufacturers.set(id.intValue(), manufacturer);
         return manufacturer;
     }
 
     @Override
     public boolean deleteById(Long id) {
-        return Storage.manufacturers.removeIf(e -> e.getId().equals(id));
+        for (int i = 0; i < Storage.manufacturers.size(); i++) {
+            if (Storage.manufacturers.get(i).getId().equals(id)) {
+                Storage.manufacturers.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean delete(Manufacturer manufacturer) {
-        return Storage.manufacturers.remove(manufacturer);
+        for (int i = 0; i < Storage.manufacturers.size(); i++) {
+            if (Storage.manufacturers.get(i).equals(manufacturer)) {
+                Storage.manufacturers.remove(manufacturer);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

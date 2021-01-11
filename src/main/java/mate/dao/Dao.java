@@ -8,7 +8,7 @@ public interface Dao<T> {
 
     Optional<T> getById(Long id);
 
-    T update(T object);
+    T update(Long id, T object);
 
     boolean deleteById(Long id);
 
