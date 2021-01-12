@@ -1,6 +1,6 @@
 package mate;
 
-import java.util.List;
+import java.util.Arrays;
 import mate.lib.Injector;
 import mate.model.Manufacturer;
 import mate.service.impl.ManufacturerService;
@@ -12,17 +12,18 @@ public class Application {
     public static void main(String[] args) {
         ManufacturerService serviceManufacturer =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer manufacturer = new Manufacturer("BMW", "Germany");
-        Manufacturer manufacturer1 = new Manufacturer("Mercedes", "Germany");
-        Manufacturer manufacturer2 = new Manufacturer("Mitsubishi", "Japan");
-        serviceManufacturer.add(manufacturer);
-        serviceManufacturer.add(manufacturer2);
-        serviceManufacturer.update(1L, manufacturer1);
+        serviceManufacturer.add(new Manufacturer("bmw1", "UK1")); // id = 1
+        serviceManufacturer.add(new Manufacturer("bmw2", "UK2")); // id = 2
+        serviceManufacturer.add(new Manufacturer("bmw3", "UK3")); // id = 3
+        serviceManufacturer.add(new Manufacturer("bmw4", "UK4")); // id = 4
         serviceManufacturer.deleteById(1L);
-        serviceManufacturer.add(manufacturer);
-        serviceManufacturer.delete(manufacturer);
-        List<Manufacturer> all = serviceManufacturer.getAll();
-        System.out.println(all.toString());
-        System.out.println();
+        serviceManufacturer.deleteById(2L);
+        Manufacturer manufacturer5 = new Manufacturer("bmw5", "UK5"); // id = 5
+        Manufacturer manufacturer = new Manufacturer("bmw51", "UK55"); // id = 5
+        manufacturer.setId(5L);
+        serviceManufacturer.add(manufacturer5);
+        serviceManufacturer.update(manufacturer);
+        System.out.println((Arrays.toString(serviceManufacturer
+                .getAll().toArray(new Manufacturer[0]))));
     }
 }
