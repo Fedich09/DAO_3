@@ -1,7 +1,7 @@
-package mate.service.impl;
+package mate.service;
 
-import mate.model.Driver;
 import java.util.List;
+import mate.model.Driver;
 
 public interface DriverService {
     Driver create(Driver driver);

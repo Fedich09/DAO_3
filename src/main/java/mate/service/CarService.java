@@ -1,8 +1,8 @@
-package mate.service.impl;
+package mate.service;
 
+import java.util.List;
 import mate.model.Car;
 import mate.model.Driver;
-import java.util.List;
 
 public interface CarService {
     Car create(Car car);

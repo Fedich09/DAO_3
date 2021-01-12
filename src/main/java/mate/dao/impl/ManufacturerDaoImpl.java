@@ -2,12 +2,13 @@ package mate.dao.impl;
 
 import java.util.List;
 import java.util.Optional;
+import mate.dao.ManufacturerDao;
 import mate.db.Storage;
 import mate.lib.Dao;
 import mate.model.Manufacturer;
 
 @Dao
-public class ManufacturerDaoImpl implements mate.dao.ManufacturerDao {
+public class ManufacturerDaoImpl implements ManufacturerDao {
     @Override
     public Manufacturer add(Manufacturer manufacturer) {
         Storage.addManufacturer(manufacturer);
