@@ -22,33 +22,25 @@ public class ManufacturerDaoImpl implements mate.dao.ManufacturerDao {
     }
 
     @Override
-    public Manufacturer update(Long id, Manufacturer manufacturer) {
-        Manufacturer old = Storage.manufacturers.get(id.intValue());
-        manufacturer.setId(id);
-        Storage.manufacturers.set(id.intValue() - 1, manufacturer);
+    public Manufacturer update(Manufacturer manufacturer) {
+        Manufacturer old = new Manufacturer();
+        for (int i = 0; i < Storage.manufacturers.size(); i++) {
+            if (manufacturer.getId().equals(Storage.manufacturers.get(i).getId())) {
+                old = Storage.manufacturers.get(i);
+                Storage.manufacturers.set(i, manufacturer);
+            }
+        }
         return old;
     }
 
     @Override
     public boolean deleteById(Long id) {
-        for (int i = 0; i < Storage.manufacturers.size(); i++) {
-            if (Storage.manufacturers.get(i).getId().equals(id)) {
-                Storage.manufacturers.remove(i);
-                return true;
-            }
-        }
-        return false;
+        return Storage.manufacturers.removeIf(e -> e.getId().equals(id));
     }
 
     @Override
     public boolean delete(Manufacturer manufacturer) {
-        for (int i = 0; i < Storage.manufacturers.size(); i++) {
-            if (Storage.manufacturers.get(i).equals(manufacturer)) {
-                Storage.manufacturers.remove(manufacturer);
-                return true;
-            }
-        }
-        return false;
+        return Storage.manufacturers.removeIf(e -> e.equals(manufacturer));
     }
 
     @Override
