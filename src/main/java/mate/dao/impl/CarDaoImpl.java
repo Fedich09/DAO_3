@@ -21,7 +21,7 @@ public class CarDaoImpl implements CarDao {
         return Storage.cars.stream()
                 .filter(e -> e.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Car not exist!"));
+                .orElseThrow(() -> new RuntimeException("Car doesn't exist!"));
     }
 
     @Override

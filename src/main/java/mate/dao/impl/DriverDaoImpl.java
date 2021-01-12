@@ -19,7 +19,7 @@ public class DriverDaoImpl implements DriverDao {
         return Storage.drivers.stream()
                 .filter(e -> e.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Drive not exist!"));
+                .orElseThrow(() -> new RuntimeException("Drive doesn't exist!"));
     }
 
     @Override
