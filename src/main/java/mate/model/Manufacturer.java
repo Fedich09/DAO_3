@@ -12,10 +12,6 @@ public class Manufacturer {
         this.country = country;
     }
 
-    public Manufacturer() {
-
-    }
-
     @Override
     public String toString() {
         return "Manufacturer{" + "id="
