@@ -7,7 +7,7 @@ import mate.db.Storage;
 import mate.lib.Dao;
 import mate.model.Manufacturer;
 
-@Dao
+
 public class ManufacturerDaoImpl implements ManufacturerDao {
     @Override
     public Manufacturer add(Manufacturer manufacturer) {
@@ -35,11 +35,6 @@ public class ManufacturerDaoImpl implements ManufacturerDao {
     @Override
     public boolean deleteById(Long id) {
         return Storage.manufacturers.removeIf(e -> e.getId().equals(id));
-    }
-
-    @Override
-    public boolean delete(Manufacturer manufacturer) {
-        return Storage.manufacturers.remove(manufacturer);
     }
 
     @Override

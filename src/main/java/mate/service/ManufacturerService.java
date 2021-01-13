@@ -1,17 +1,17 @@
-package mate.dao;
+package mate.service;
 
+import mate.model.Manufacturer;
 import java.util.List;
 import java.util.Optional;
-import mate.model.Manufacturer;
 
-public interface ManufacturerDao {
+public interface ManufacturerService {
     Manufacturer add(Manufacturer manufacturer);
 
     Optional<Manufacturer> getById(Long id);
 
     Manufacturer update(Manufacturer object);
 
-    boolean deleteById(Long id);
+    boolean delete(Long id);
 
     List<Manufacturer> getAll();
 }

@@ -7,12 +7,22 @@ import mate.model.Driver;
 import mate.model.Manufacturer;
 import mate.service.CarService;
 import mate.service.DriverService;
+import mate.service.ManufacturerService;
 
 public class Application {
     private static Injector injector = Injector
             .getInstance("mate");
 
     public static void main(String[] args) {
+        ManufacturerService manufacturerService = (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        manufacturerService.add(new Manufacturer("bmv", "german"));
+        System.out.println(manufacturerService.getById(22L));
+        Manufacturer manufacturer = new Manufacturer("zaz", "UA");
+        manufacturer.setId(1L);
+        System.out.println(manufacturerService.update(manufacturer));
+        System.out.println(manufacturerService.delete(3L));
+        System.out.println(manufacturerService.getAll());
+
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         driverService.create(new Driver("Vova", "ab123"));
         driverService.create(new Driver("Dima", "cd456"));
