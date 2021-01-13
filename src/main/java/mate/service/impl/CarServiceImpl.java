@@ -45,6 +45,7 @@ public class CarServiceImpl implements CarService {
         List<Driver> cars = car.getDrivers();
         cars.add(driver);
         car.setDrivers(cars);
+        carDao.update(car);
     }
 
     @Override
@@ -56,6 +57,7 @@ public class CarServiceImpl implements CarService {
             }
         }
         car.setDrivers(drivers);
+        carDao.update(car);
     }
 
     @Override
