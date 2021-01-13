@@ -1,6 +1,7 @@
 package mate.dao.impl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import mate.dao.CarDao;
@@ -47,7 +48,7 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAllByDriver(Long driverId) {
         return Storage.cars.stream()
                 .filter(c -> c.getDrivers().stream()
-                        .anyMatch(d -> d.getId() != null && d.getId().equals(driverId)))
+                        .anyMatch(d -> Objects.equals(d.getId(), driverId)))
                 .collect(Collectors.toList());
     }
 }
