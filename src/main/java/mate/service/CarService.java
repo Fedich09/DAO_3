@@ -1,13 +1,14 @@
 package mate.service;
 
 import java.util.List;
+import java.util.Optional;
 import mate.model.Car;
 import mate.model.Driver;
 
 public interface CarService {
     Car create(Car car);
 
-    Car get(Long id);
+    Optional<Car> get(Long id);
 
     List<Car> getAll();
 

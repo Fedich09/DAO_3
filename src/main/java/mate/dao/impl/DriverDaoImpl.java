@@ -1,6 +1,7 @@
 package mate.dao.impl;
 
 import java.util.List;
+import java.util.Optional;
 import mate.dao.DriverDao;
 import mate.db.Storage;
 import mate.lib.Dao;
@@ -15,11 +16,10 @@ public class DriverDaoImpl implements DriverDao {
     }
 
     @Override
-    public Driver get(Long id) {
+    public Optional<Driver> get(Long id) {
         return Storage.drivers.stream()
                 .filter(e -> e.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Drive doesn't exist!"));
+                .findFirst();
     }
 
     @Override
