@@ -30,7 +30,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
 
     @Override
     public Manufacturer add(Manufacturer manufacturer) {
-        String query = "INSERT INTO taxi_service.manufacturers(manufacturer_name,"
+        String query = "INSERT INTO manufacturers(manufacturer_name,"
                 + " manufacturer_country) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(query,
@@ -51,7 +51,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
 
     @Override
     public Optional<Manufacturer> getById(Long id) {
-        String query = "SELECT * FROM taxi_service.manufacturers "
+        String query = "SELECT * FROM manufacturers "
                 + "WHERE manufacturer_id = ? "
                 + "AND `delete` = false";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -69,7 +69,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
 
     @Override
     public Manufacturer update(Manufacturer manufacturer) {
-        String query = "UPDATE taxi_service.manufacturers SET manufacturer_name = ?, "
+        String query = "UPDATE manufacturers SET manufacturer_name = ?, "
                 + " manufacturer_country = ? WHERE manufacturer_id = ? "
                 + "AND `delete` = false";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -86,7 +86,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
 
     @Override
     public boolean deleteById(Long id) {
-        String query = "UPDATE taxi_service.manufacturers SET `delete` = ? "
+        String query = "UPDATE manufacturers SET `delete` = ? "
                 + "WHERE manufacturer_id =" + id;
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -99,7 +99,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
 
     @Override
     public List<Manufacturer> getAll() {
-        String query = "SELECT * FROM taxi_service.manufacturers WHERE `delete` = false";
+        String query = "SELECT * FROM manufacturers WHERE `delete` = false";
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
