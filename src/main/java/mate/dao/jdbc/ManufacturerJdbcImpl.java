@@ -17,17 +17,6 @@ import mate.util.ConnectionUtil;
 @Dao
 public class ManufacturerJdbcImpl implements ManufacturerDao {
 
-    private static Optional<Manufacturer> createNewManufacturer(ResultSet resultSet) {
-        try {
-            Manufacturer manufacturer = new Manufacturer(resultSet.getString("manufacturer_name"),
-                    resultSet.getString("manufacturer_country"));
-            manufacturer.setId(resultSet.getLong(1));
-            return Optional.of(manufacturer);
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't create new manufacturer", e);
-        }
-    }
-
     @Override
     public Manufacturer add(Manufacturer manufacturer) {
         String query = "INSERT INTO manufacturers(manufacturer_name,"
@@ -40,9 +29,8 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
-                manufacturer.setId(resultSet.getLong(1));
+                manufacturer.setId(resultSet.getObject(1, Long.class));
             }
-            resultSet.close();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't add into DB this manufacture"
                     + manufacturer, e);
@@ -54,15 +42,14 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
     public Optional<Manufacturer> getById(Long id) {
         String query = "SELECT * FROM manufacturers "
                 + "WHERE manufacturer_id = ? "
-                + "AND `delete` = false";
+                + "AND `is_delete` = false";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return createNewManufacturer(resultSet);
+                return Optional.of(createNewManufacturer(resultSet));
             }
-            resultSet.close();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get element by this id " + id, e);
         }
@@ -73,7 +60,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
     public Manufacturer update(Manufacturer manufacturer) {
         String query = "UPDATE manufacturers SET manufacturer_name = ?, "
                 + " manufacturer_country = ? WHERE manufacturer_id = ? "
-                + "AND `delete` = false";
+                + "AND `is_delete` = false";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, manufacturer.getName());
@@ -88,7 +75,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
 
     @Override
     public boolean deleteById(Long id) {
-        String query = "UPDATE manufacturers SET `delete` = ? "
+        String query = "UPDATE manufacturers SET `is_delete` = ? "
                 + "WHERE manufacturer_id =" + id;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -101,18 +88,28 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
 
     @Override
     public List<Manufacturer> getAll() {
-        String query = "SELECT * FROM manufacturers WHERE `delete` = false";
+        String query = "SELECT * FROM manufacturers WHERE `is_delete` = false";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery()) {
             List<Manufacturer> manufacturers = new ArrayList<>();
             while (resultSet.next()) {
-                manufacturers.add(createNewManufacturer(resultSet).get());
+                manufacturers.add(createNewManufacturer(resultSet));
             }
-            resultSet.close();
             return manufacturers;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all element", e);
+        }
+    }
+
+    private Manufacturer createNewManufacturer(ResultSet resultSet) {
+        try {
+            Manufacturer manufacturer = new Manufacturer(resultSet.getString("manufacturer_name"),
+                    resultSet.getString("manufacturer_country"));
+            manufacturer.setId(resultSet.getObject(1, Long.class));
+            return manufacturer;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't create new manufacturer", e);
         }
     }
 }
