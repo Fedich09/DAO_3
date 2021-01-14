@@ -1,12 +1,12 @@
 package mate.service.impl;
 
+import java.util.List;
+import java.util.Optional;
 import mate.dao.ManufacturerDao;
 import mate.lib.Inject;
 import mate.lib.Service;
 import mate.model.Manufacturer;
 import mate.service.ManufacturerService;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {

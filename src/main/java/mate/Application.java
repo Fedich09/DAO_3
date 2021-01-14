@@ -14,7 +14,8 @@ public class Application {
             .getInstance("mate");
 
     public static void main(String[] args) {
-        ManufacturerService manufacturerService = (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        ManufacturerService manufacturerService =
+                (ManufacturerService) injector.getInstance(ManufacturerService.class);
         manufacturerService.add(new Manufacturer("bmv", "german"));
         System.out.println(manufacturerService.getById(22L));
         Manufacturer manufacturer = new Manufacturer("zaz", "UA");

@@ -1,17 +1,32 @@
 package mate.dao.jdbc;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import mate.dao.ManufacturerDao;
 import mate.exception.DataProcessingException;
 import mate.lib.Dao;
 import mate.model.Manufacturer;
 import mate.util.ConnectionUtil;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Dao
-public class ManufacturerJDBCDaoImpl implements ManufacturerDao {
+public class ManufacturerJdbcImpl implements ManufacturerDao {
+
+    private static Optional<Manufacturer> createNewManufacturer(ResultSet resultSet) {
+        try {
+            Manufacturer manufacturer = new Manufacturer(resultSet.getString("manufacturer_name"),
+                    resultSet.getString("manufacturer_country"));
+            manufacturer.setId(resultSet.getLong(1));
+            return Optional.of(manufacturer);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't create new manufacturer", e);
+        }
+    }
 
     @Override
     public Manufacturer add(Manufacturer manufacturer) {
@@ -19,16 +34,17 @@ public class ManufacturerJDBCDaoImpl implements ManufacturerDao {
                 + " manufacturer_country) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(query,
-                     Statement.RETURN_GENERATED_KEYS);
-             ResultSet resultSet = statement.getGeneratedKeys()) {
+                     Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, manufacturer.getName());
             statement.setString(2, manufacturer.getCountry());
             statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 manufacturer.setId(resultSet.getLong(1));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't add into DB this manufacture" + manufacturer, e);
+            throw new DataProcessingException("Can't add into DB this manufacture"
+                    + manufacturer, e);
         }
         return manufacturer;
     }
@@ -39,14 +55,14 @@ public class ManufacturerJDBCDaoImpl implements ManufacturerDao {
                 + "WHERE manufacturer_id = ? "
                 + "AND `delete` = false";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
+             PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return createNewManufacturer(resultSet);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get element by this id" + id, e);
+            throw new DataProcessingException("Can't get element by this id " + id, e);
         }
         return Optional.empty();
     }
@@ -94,17 +110,6 @@ public class ManufacturerJDBCDaoImpl implements ManufacturerDao {
             return manufacturers;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all element", e);
-        }
-    }
-
-    private static Optional<Manufacturer> createNewManufacturer(ResultSet resultSet) {
-        try {
-            Manufacturer manufacturer = new Manufacturer(resultSet.getString("manufacturer_name"),
-                    resultSet.getString("manufacturer_country"));
-            manufacturer.setId(resultSet.getLong(1));
-            return Optional.of(manufacturer);
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't create new manufacturer", e);
         }
     }
 }

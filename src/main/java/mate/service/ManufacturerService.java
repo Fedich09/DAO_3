@@ -1,8 +1,8 @@
 package mate.service;
 
-import mate.model.Manufacturer;
 import java.util.List;
 import java.util.Optional;
+import mate.model.Manufacturer;
 
 public interface ManufacturerService {
     Manufacturer add(Manufacturer manufacturer);
