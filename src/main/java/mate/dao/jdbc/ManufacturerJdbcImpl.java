@@ -42,6 +42,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
             if (resultSet.next()) {
                 manufacturer.setId(resultSet.getLong(1));
             }
+            resultSet.close();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't add into DB this manufacture"
                     + manufacturer, e);
@@ -61,6 +62,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
             if (resultSet.next()) {
                 return createNewManufacturer(resultSet);
             }
+            resultSet.close();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get element by this id " + id, e);
         }
@@ -107,6 +109,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
             while (resultSet.next()) {
                 manufacturers.add(createNewManufacturer(resultSet).get());
             }
+            resultSet.close();
             return manufacturers;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all element", e);
