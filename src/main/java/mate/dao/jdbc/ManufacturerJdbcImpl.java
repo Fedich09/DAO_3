@@ -33,8 +33,8 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
         String query = "INSERT INTO manufacturers(manufacturer_name,"
                 + " manufacturer_country) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query,
-                     Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement statement = connection.prepareStatement(query,
+                        Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, manufacturer.getName());
             statement.setString(2, manufacturer.getCountry());
             statement.executeUpdate();
@@ -56,7 +56,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
                 + "WHERE manufacturer_id = ? "
                 + "AND `delete` = false";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -75,7 +75,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
                 + " manufacturer_country = ? WHERE manufacturer_id = ? "
                 + "AND `delete` = false";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, manufacturer.getName());
             statement.setString(2, manufacturer.getCountry());
             statement.setLong(3, manufacturer.getId());
@@ -91,7 +91,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
         String query = "UPDATE manufacturers SET `delete` = ? "
                 + "WHERE manufacturer_id =" + id;
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setBoolean(1, true);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -103,8 +103,8 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
     public List<Manufacturer> getAll() {
         String query = "SELECT * FROM manufacturers WHERE `delete` = false";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
+                PreparedStatement statement = connection.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery()) {
             List<Manufacturer> manufacturers = new ArrayList<>();
             while (resultSet.next()) {
                 manufacturers.add(createNewManufacturer(resultSet).get());
