@@ -13,13 +13,13 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     private ManufacturerDao manufacturerDao;
 
     @Override
-    public Manufacturer add(Manufacturer manufacturer) {
-        return manufacturerDao.add(manufacturer);
+    public Manufacturer create(Manufacturer manufacturer) {
+        return manufacturerDao.create(manufacturer);
     }
 
     @Override
-    public Manufacturer getById(Long id) {
-        return manufacturerDao.getById(id).get();
+    public Manufacturer get(Long id) {
+        return manufacturerDao.get(id).get();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 
     @Override
     public boolean delete(Long id) {
-        return manufacturerDao.deleteById(id);
+        return manufacturerDao.delete(id);
     }
 
     @Override

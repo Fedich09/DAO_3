@@ -4,9 +4,9 @@ import java.util.List;
 import mate.model.Manufacturer;
 
 public interface ManufacturerService {
-    Manufacturer add(Manufacturer manufacturer);
+    Manufacturer create(Manufacturer manufacturer);
 
-    Manufacturer getById(Long id);
+    Manufacturer get(Long id);
 
     Manufacturer update(Manufacturer object);
 

@@ -18,7 +18,7 @@ import mate.util.ConnectionUtil;
 public class ManufacturerJdbcImpl implements ManufacturerDao {
 
     @Override
-    public Manufacturer add(Manufacturer manufacturer) {
+    public Manufacturer create(Manufacturer manufacturer) {
         String query = "INSERT INTO manufacturers(manufacturer_name,"
                 + " manufacturer_country) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -39,10 +39,10 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
     }
 
     @Override
-    public Optional<Manufacturer> getById(Long id) {
+    public Optional<Manufacturer> get(Long id) {
         String query = "SELECT * FROM manufacturers "
                 + "WHERE manufacturer_id = ? "
-                + "AND `is_delete` = false";
+                + "AND is_delete = false";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -60,7 +60,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
     public Manufacturer update(Manufacturer manufacturer) {
         String query = "UPDATE manufacturers SET manufacturer_name = ?, "
                 + " manufacturer_country = ? WHERE manufacturer_id = ? "
-                + "AND `is_delete` = false";
+                + "AND is_delete = false";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, manufacturer.getName());
@@ -74,8 +74,8 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
     }
 
     @Override
-    public boolean deleteById(Long id) {
-        String query = "UPDATE manufacturers SET `is_delete` = ? "
+    public boolean delete(Long id) {
+        String query = "UPDATE manufacturers SET is_delete = ? "
                 + "WHERE manufacturer_id =" + id;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -88,7 +88,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
 
     @Override
     public List<Manufacturer> getAll() {
-        String query = "SELECT * FROM manufacturers WHERE `is_delete` = false";
+        String query = "SELECT * FROM manufacturers WHERE is_delete = false";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery()) {
@@ -98,7 +98,7 @@ public class ManufacturerJdbcImpl implements ManufacturerDao {
             }
             return manufacturers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get all element", e);
+            throw new DataProcessingException("Can't get all elements", e);
         }
     }
 
