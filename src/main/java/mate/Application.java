@@ -21,7 +21,7 @@ public class Application {
         List<Driver> drivers = driverService.getAll().stream()
                 .filter(e -> e.getId() % 2 == 0)
                 .collect(Collectors.toList());
-        Car car = carService.get(25L).get();
+        Car car = carService.get(25L);
         car.setManufacturer(manufacturerService.get(54L));
         car.setModel("new model");
         car.setId(45L);
