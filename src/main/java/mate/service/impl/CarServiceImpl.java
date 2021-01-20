@@ -1,7 +1,6 @@
 package mate.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 import mate.dao.CarDao;
 import mate.lib.Inject;
 import mate.lib.Service;
@@ -20,8 +19,8 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Optional<Car> get(Long id) {
-        return carDao.get(id);
+    public Car get(Long id) {
+        return carDao.get(id).get();
     }
 
     @Override

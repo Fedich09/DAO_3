@@ -1,21 +1,10 @@
 package mate.service;
 
 import java.util.List;
-import java.util.Optional;
 import mate.model.Car;
 import mate.model.Driver;
 
-public interface CarService {
-    Car create(Car car);
-
-    Optional<Car> get(Long id);
-
-    List<Car> getAll();
-
-    Car update(Car car);
-
-    boolean delete(Long id);
-
+public interface CarService extends GenericService<Car, Long> {
     void addDriverToCar(Driver driver, Car car);
 
     void removeDriverFromCar(Driver driver, Car car);
