@@ -31,11 +31,11 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>createNewManufacturerController</servlet-name>
+        <servlet-name>createNewManufacturer</servlet-name>
         <servlet-class>mate.controller.manufacturer.CreateNewManufacturerController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>createNewManufacturerController</servlet-name>
+        <servlet-name>createNewManufacturer</servlet-name>
         <url-pattern>/manufacturers/create</url-pattern>
     </servlet-mapping>
 
@@ -54,6 +54,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>addingDriverToCarController</servlet-name>
-        <url-pattern>/cars/add</url-pattern>
+        <url-pattern>/cars/drivers/add</url-pattern>
     </servlet-mapping>
 </web-app>

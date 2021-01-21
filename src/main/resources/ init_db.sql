@@ -57,4 +57,11 @@ ALTER TABLE `taxi_service`.`cars_drivers`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION;
 
+ALTER TABLE `taxi_service`.`drivers`
+    ADD COLUMN `login`    VARCHAR(225) NOT NULL AFTER `is_delete`,
+    ADD COLUMN `password` VARCHAR(225) NOT NULL AFTER `login`,
+    ADD UNIQUE INDEX `login_UNIQUE` (`login` ASC) VISIBLE;
+;
+
+
 
