@@ -1,4 +1,4 @@
-package mate.controller.cars;
+package mate.controller.car;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -19,14 +19,14 @@ public class CreateNewCarController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/car/create.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/view/car/create.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String carModel = req.getParameter("carModel");
-        String manufacturerId = req.getParameter("manufacturerId");
+        String carModel = req.getParameter("car_model");
+        String manufacturerId = req.getParameter("manufacturer_id");
         carService.create(new Car(carModel, manufacturerService
                 .get(Long.parseLong(manufacturerId))));
         resp.sendRedirect(req.getContextPath() + "/");

@@ -1,4 +1,4 @@
-package mate.controller;
+package mate.controller.driver;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -16,7 +16,7 @@ public class CreateNewDriverController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/driver/create.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/view/driver/create.jsp").forward(req, resp);
     }
 
     @Override

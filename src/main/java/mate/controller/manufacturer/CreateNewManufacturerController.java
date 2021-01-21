@@ -1,4 +1,4 @@
-package mate.controller.manufacturers;
+package mate.controller.manufacturer;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -17,14 +17,14 @@ public class CreateNewManufacturerController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/manufacturer/create.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/view/manufacturer/create.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        String manufacturerName = req.getParameter("manufacturerName");
-        String manufacturerCountry = req.getParameter("manufacturerCountry");
+        String manufacturerName = req.getParameter("manufacturer_name");
+        String manufacturerCountry = req.getParameter("manufacturer_country");
         Manufacturer manufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
         manufacturerService.create(manufacturer);
         resp.sendRedirect(req.getContextPath() + "/");
