@@ -68,7 +68,7 @@ public class CarJdbcImpl implements CarDao {
                         ResultSet.CONCUR_READ_ONLY)) {
             statement.setObject(1, id);
             ResultSet resultSet = statement.executeQuery();
-            resultSet.first();
+            resultSet.next();
             Car car = createNewCar(resultSet);
             List<Driver> drivers = getCarDrivers(car.getId(), resultSet);
             car.setDrivers(drivers);
