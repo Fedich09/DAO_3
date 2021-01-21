@@ -1,4 +1,4 @@
-package mate.controllers;
+package mate.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,8 +18,8 @@ public class DisplayAllDriversController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        List<Driver> listDrivers = driverService.getAll();
-        req.setAttribute("drivers", listDrivers);
+        List<Driver> listOfDrivers = driverService.getAll();
+        req.setAttribute("drivers", listOfDrivers);
         req.getRequestDispatcher("/WEB-INF/views/driver/all.jsp").forward(req, resp);
     }
 }

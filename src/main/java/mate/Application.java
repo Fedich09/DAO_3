@@ -27,5 +27,6 @@ public class Application {
         carService.update(car);
         System.out.println(carService.get(16L));
         System.out.println(carService.get(16L).getDrivers().size());
+        System.out.println(carService.getAll());
     }
 }

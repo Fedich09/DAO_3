@@ -50,7 +50,7 @@ public class CarJdbcImpl implements CarDao {
                 + "    cd.driver_id,"
                 + "    d.name,"
                 + "    d.license_number "
-                + "FROM\n"
+                + "FROM "
                 + "    cars AS c"
                 + "        LEFT JOIN"
                 + "    manufacturers AS m ON c.manufacturer_id = m.manufacturer_id"
@@ -58,10 +58,11 @@ public class CarJdbcImpl implements CarDao {
                 + "    cars_drivers AS cd ON c.car_id = cd.car_id"
                 + "        LEFT JOIN"
                 + "    drivers AS d ON d.driver_id = cd.driver_id "
-                + "    where c.car_id = ? and c.is_delete = false and m.is_delete = false "
-                + "UNION ALL SELECT "
+                + "    WHERE c.car_id = ? AND c.is_delete = false "
+                + "AND m.is_delete = false "
+                + "UNION SELECT "
                 + "    c.car_id,"
-                + "    c.model,\n"
+                + "    c.model,"
                 + "    m.manufacturer_id,"
                 + "    m.manufacturer_name,"
                 + "    m.manufacturer_country,"
@@ -76,7 +77,9 @@ public class CarJdbcImpl implements CarDao {
                 + "    cars_drivers AS cd ON c.car_id = cd.car_id"
                 + "        RIGHT JOIN"
                 + "    drivers AS d ON d.driver_id = cd.driver_id"
-                + "    where c.car_id = ? and c.is_delete = false and m.is_delete = false";
+                + "    WHERE c.car_id = ? AND c.is_delete = false "
+                + "AND m.is_delete = false";
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query,
                         ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -84,14 +87,15 @@ public class CarJdbcImpl implements CarDao {
             statement.setObject(1, id);
             statement.setObject(2, id);
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            Car car = createNewCar(resultSet);
-            List<Driver> drivers = getCarDrivers(car.getId(), resultSet);
-            car.setDrivers(drivers);
-            return Optional.of(car);
+            if (resultSet.next()) {
+                car = createNewCar(resultSet);
+                List<Driver> drivers = getCarDrivers(car.getId(), resultSet);
+                car.setDrivers(drivers);
+            }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car by id " + id, e);
         }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -105,17 +109,33 @@ public class CarJdbcImpl implements CarDao {
                 + "    cd.driver_id,"
                 + "    d.name,"
                 + "    d.license_number "
-                + "FROM"
+                + "FROM "
                 + "    cars AS c"
-                + "        JOIN"
+                + "        LEFT JOIN"
                 + "    manufacturers AS m ON c.manufacturer_id = m.manufacturer_id"
-                + "        JOIN"
+                + "        LEFT JOIN"
                 + "    cars_drivers AS cd ON c.car_id = cd.car_id"
-                + "        JOIN"
+                + "        LEFT JOIN"
                 + "    drivers AS d ON d.driver_id = cd.driver_id "
-                + "WHERE c.is_delete = FALSE"
-                + "     AND d.is_delete = FALSE"
-                + "     AND m.is_delete = FALSE";
+                + "    WHERE c.is_delete = false and m.is_delete = false "
+                + "UNION SELECT "
+                + "    c.car_id,"
+                + "    c.model,"
+                + "    m.manufacturer_id,"
+                + "    m.manufacturer_name,"
+                + "    m.manufacturer_country,"
+                + "    cd.driver_id,"
+                + "    d.name,"
+                + "    d.license_number "
+                + "FROM "
+                + "    cars AS c"
+                + "        RIGHT JOIN"
+                + "    manufacturers AS m ON c.manufacturer_id = m.manufacturer_id"
+                + "        RIGHT JOIN"
+                + "    cars_drivers AS cd ON c.car_id = cd.car_id"
+                + "        RIGHT JOIN"
+                + "    drivers AS d ON d.driver_id = cd.driver_id"
+                + "    where c.is_delete = false and m.is_delete = false ";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query,
                         ResultSet.TYPE_SCROLL_SENSITIVE,
@@ -142,8 +162,8 @@ public class CarJdbcImpl implements CarDao {
                 + "    c.car_id = ? "
                 + "AND "
                 + "     c.is_delete = FALSE ";
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = ConnectionUtil.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, car.getModel());
             statement.setObject(2, car.getManufacturer().getId());
             statement.setObject(3, car.getId());
