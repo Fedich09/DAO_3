@@ -19,11 +19,13 @@ public class Application {
                 .getInstance(DriverService.class);
         ManufacturerService manufacturerService = (ManufacturerService) injector
                 .getInstance(ManufacturerService.class);
-        Car car = carService.get(2L);
+        Car car = carService.get(16L);
         List<Driver> drivers = driverService.getAll().stream()
                 .filter(i -> i.getId() % 10 == 0)
                 .collect(Collectors.toList());
         car.setDrivers(drivers);
         carService.update(car);
+        System.out.println(carService.get(16L));
+        System.out.println(carService.get(16L).getDrivers().size());
     }
 }
