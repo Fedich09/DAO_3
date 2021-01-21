@@ -5,10 +5,10 @@
 </head>
 <body>
 <h1>Taxi service</h1>
-<br><a href="${pageContext.request.contextPath}/drivers/create">Create new driver</a>
-<br><a href="${pageContext.request.contextPath}/drivers/all">Display all drivers</a>
-<br><a href="${pageContext.request.contextPath}/manufacturers/create">Creat new manufacturer</a>
-<br><a href="${pageContext.request.contextPath}/cars/create">Creat new car</a>
-<br><a href="${pageContext.request.contextPath}/cars/add">Add driver to car</a>
+<br><a href="${pageContext.request.contextPath}/driver/create">Create new driver</a>
+<br><a href="${pageContext.request.contextPath}/driver/all">Display all drivers</a>
+<br><a href="${pageContext.request.contextPath}/manufacturer/create">Creat new manufacturer</a>
+<br><a href="${pageContext.request.contextPath}/car/create">Creat new car</a>
+<br><a href="${pageContext.request.contextPath}/car/add">Add driver to car</a>
 </body>
 </html>
