@@ -7,9 +7,53 @@
         <servlet-name>index</servlet-name>
         <servlet-class>mate.controller.IndexController</servlet-class>
     </servlet>
-    
     <servlet-mapping>
         <servlet-name>index</servlet-name>
-        <url-pattern>/index</url-pattern>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>createNewDriver</servlet-name>
+        <servlet-class>mate.controller.driver.CreateNewDriverController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>createNewDriver</servlet-name>
+        <url-pattern>/drivers/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>displayAllDrivers</servlet-name>
+        <servlet-class>mate.controller.driver.DisplayAllDriversController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>displayAllDrivers</servlet-name>
+        <url-pattern>/drivers</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>createNewManufacturerController</servlet-name>
+        <servlet-class>mate.controller.manufacturer.CreateNewManufacturerController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>createNewManufacturerController</servlet-name>
+        <url-pattern>/manufacturers/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>createNewCarController</servlet-name>
+        <servlet-class>mate.controller.car.CreateNewCarController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>createNewCarController</servlet-name>
+        <url-pattern>/cars/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>addingDriverToCarController</servlet-name>
+        <servlet-class>mate.controller.car.AddDriverToCarController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>addingDriverToCarController</servlet-name>
+        <url-pattern>/cars/add</url-pattern>
     </servlet-mapping>
 </web-app>

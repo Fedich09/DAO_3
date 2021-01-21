@@ -22,7 +22,7 @@ public class CarJdbcImpl implements CarDao {
     public Car create(Car car) {
         String query = "INSERT INTO cars(model, manufacturer_id) VALUES(?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
+                 PreparedStatement statement = connection.prepareStatement(query,
                         Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, car.getModel());
             statement.setObject(2, car.getManufacturer().getId());
@@ -50,32 +50,52 @@ public class CarJdbcImpl implements CarDao {
                 + "    cd.driver_id,"
                 + "    d.name,"
                 + "    d.license_number "
-                + "FROM"
+                + "FROM "
                 + "    cars AS c"
-                + "        JOIN"
+                + "        LEFT JOIN"
                 + "    manufacturers AS m ON c.manufacturer_id = m.manufacturer_id"
-                + "        JOIN"
+                + "        LEFT JOIN"
                 + "    cars_drivers AS cd ON c.car_id = cd.car_id"
-                + "        JOIN"
+                + "        LEFT JOIN"
                 + "    drivers AS d ON d.driver_id = cd.driver_id "
-                + "WHERE"
-                + "    c.car_id = ? AND c.is_delete = FALSE "
-                + "     AND d.is_delete = FALSE "
-                + "     AND m.is_delete = FALSE";
+                + "    WHERE c.car_id = ? AND c.is_delete = false "
+                + "AND m.is_delete = false "
+                + "UNION SELECT "
+                + "    c.car_id,"
+                + "    c.model,"
+                + "    m.manufacturer_id,"
+                + "    m.manufacturer_name,"
+                + "    m.manufacturer_country,"
+                + "    cd.driver_id,"
+                + "    d.name,"
+                + "    d.license_number "
+                + "FROM "
+                + "    cars AS c"
+                + "        RIGHT JOIN"
+                + "    manufacturers AS m ON c.manufacturer_id = m.manufacturer_id"
+                + "        RIGHT JOIN"
+                + "    cars_drivers AS cd ON c.car_id = cd.car_id"
+                + "        RIGHT JOIN"
+                + "    drivers AS d ON d.driver_id = cd.driver_id"
+                + "    WHERE c.car_id = ? AND c.is_delete = false "
+                + "AND m.is_delete = false";
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
+                 PreparedStatement statement = connection.prepareStatement(query,
                         ResultSet.TYPE_SCROLL_SENSITIVE,
                         ResultSet.CONCUR_READ_ONLY)) {
             statement.setObject(1, id);
+            statement.setObject(2, id);
             ResultSet resultSet = statement.executeQuery();
-            resultSet.first();
-            Car car = createNewCar(resultSet);
-            List<Driver> drivers = getCarDrivers(car.getId(), resultSet);
-            car.setDrivers(drivers);
-            return Optional.of(car);
+            if (resultSet.next()) {
+                car = createNewCar(resultSet);
+                List<Driver> drivers = getCarDrivers(car.getId(), resultSet);
+                car.setDrivers(drivers);
+            }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car by id " + id, e);
         }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -89,19 +109,35 @@ public class CarJdbcImpl implements CarDao {
                 + "    cd.driver_id,"
                 + "    d.name,"
                 + "    d.license_number "
-                + "FROM"
+                + "FROM "
                 + "    cars AS c"
-                + "        JOIN"
+                + "        LEFT JOIN"
                 + "    manufacturers AS m ON c.manufacturer_id = m.manufacturer_id"
-                + "        JOIN"
+                + "        LEFT JOIN"
                 + "    cars_drivers AS cd ON c.car_id = cd.car_id"
-                + "        JOIN"
+                + "        LEFT JOIN"
                 + "    drivers AS d ON d.driver_id = cd.driver_id "
-                + "WHERE c.is_delete = FALSE"
-                + "     AND d.is_delete = FALSE"
-                + "     AND m.is_delete = FALSE";
+                + "    WHERE c.is_delete = false and m.is_delete = false "
+                + "UNION SELECT "
+                + "    c.car_id,"
+                + "    c.model,"
+                + "    m.manufacturer_id,"
+                + "    m.manufacturer_name,"
+                + "    m.manufacturer_country,"
+                + "    cd.driver_id,"
+                + "    d.name,"
+                + "    d.license_number "
+                + "FROM "
+                + "    cars AS c"
+                + "        RIGHT JOIN"
+                + "    manufacturers AS m ON c.manufacturer_id = m.manufacturer_id"
+                + "        RIGHT JOIN"
+                + "    cars_drivers AS cd ON c.car_id = cd.car_id"
+                + "        RIGHT JOIN"
+                + "    drivers AS d ON d.driver_id = cd.driver_id"
+                + "    where c.is_delete = false and m.is_delete = false ";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
+                 PreparedStatement statement = connection.prepareStatement(query,
                         ResultSet.TYPE_SCROLL_SENSITIVE,
                         ResultSet.CONCUR_READ_ONLY)) {
             ResultSet resultSet = statement.executeQuery();
@@ -121,20 +157,20 @@ public class CarJdbcImpl implements CarDao {
         String query = "UPDATE cars as c "
                 + "SET "
                 + "    c.model = ?,"
-                + "    c.manufacturer_id = ?"
+                + "    c.manufacturer_id = ? "
                 + "WHERE"
-                + "    car_id = ? "
+                + "    c.car_id = ? "
                 + "AND "
                 + "     c.is_delete = FALSE ";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = ConnectionUtil.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, car.getModel());
             statement.setObject(2, car.getManufacturer().getId());
             statement.setObject(3, car.getId());
+            statement.executeUpdate();
+            statement.close();
             deleteCarDrivers(car.getId(), connection);
             insertCarDrivers(car, connection);
-            statement.executeBatch();
-            car.setId(car.getId());
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update this car " + car, e);
@@ -149,7 +185,7 @@ public class CarJdbcImpl implements CarDao {
                 + "WHERE"
                 + "    car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setBoolean(1, true);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -179,7 +215,7 @@ public class CarJdbcImpl implements CarDao {
                 + "WHERE d.driver_id = ? AND c.is_delete = FALSE"
                 + "     AND d.is_delete = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
+                 PreparedStatement statement = connection.prepareStatement(query,
                         ResultSet.TYPE_SCROLL_SENSITIVE,
                         ResultSet.CONCUR_READ_ONLY)) {
             statement.setObject(1, driverId);
@@ -230,15 +266,18 @@ public class CarJdbcImpl implements CarDao {
 
     private List<Driver> getCarDrivers(Long id, ResultSet resultSet) {
         try {
-            resultSet.beforeFirst();
             List<Driver> drivers = new ArrayList<>();
+            resultSet.beforeFirst();
             while (resultSet.next()) {
-                if (resultSet.getObject("car_id", Long.class).equals(id)) {
-                    Driver driver = new Driver(resultSet.getString("name"),
-                            resultSet.getString("license_number"));
-                    driver.setId(resultSet.getObject("driver_id", Long.class));
-                    drivers.add(driver);
+                Long driverId = resultSet.getObject("driver_id", Long.class);
+                if (driverId == null) {
+                    break;
                 }
+                Driver driver = new Driver(resultSet.getString("name"),
+                        resultSet.getString("license_number"));
+                driver.setId(driverId);
+                drivers.add(driver);
+
             }
             return drivers;
         } catch (SQLException e) {
@@ -247,12 +286,12 @@ public class CarJdbcImpl implements CarDao {
     }
 
     private void insertCarDrivers(Car car, Connection connection) {
-        String query = "INSERT INTO  cars_drivers VALUES(?, ?)";
+        String query = "INSERT INTO  cars_drivers(driver_id, car_id) VALUES(?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            for (int i = 0; i < car.getDrivers().size(); i++) {
-                statement.setObject(1, car.getDrivers().get(i).getId());
+            for (Driver driver: car.getDrivers()) {
+                statement.setObject(1, driver.getId());
                 statement.setObject(2, car.getId());
-                statement.addBatch();
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't add drivers to car " + car, e);
@@ -262,9 +301,10 @@ public class CarJdbcImpl implements CarDao {
     private void deleteCarDrivers(Long id, Connection connection) {
         String query = "DELETE FROM cars_drivers "
                 + "WHERE"
-                + "    car_id = ?;";
+                + "    car_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, id);
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete all drivers from this car id "
                     + id, e);
