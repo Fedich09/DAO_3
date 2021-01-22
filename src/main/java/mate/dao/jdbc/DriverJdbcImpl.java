@@ -18,12 +18,15 @@ import mate.util.ConnectionUtil;
 public class DriverJdbcImpl implements DriverDao {
     @Override
     public Driver create(Driver driver) {
-        String query = "INSERT INTO drivers(name, license_number) VALUES(?, ?)";
+        String query = "INSERT INTO drivers(name, license_number, login,"
+                + " password) VALUES(?, ?, ?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
-                        Statement.RETURN_GENERATED_KEYS)) {
+                 PreparedStatement statement = connection.prepareStatement(query,
+                         Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, driver.getName());
             statement.setString(2, driver.getLicenceNumber());
+            statement.setString(3, driver.getLogin());
+            statement.setString(4, driver.getPassword());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -39,7 +42,7 @@ public class DriverJdbcImpl implements DriverDao {
     public Optional<Driver> get(Long id) {
         String query = "SELECT * FROM drivers WHERE driver_id = ? AND is_delete = false";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -55,7 +58,7 @@ public class DriverJdbcImpl implements DriverDao {
     public List<Driver> getAll() {
         String query = "SELECT * FROM drivers WHERE is_delete = false";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
@@ -70,13 +73,16 @@ public class DriverJdbcImpl implements DriverDao {
     @Override
     public Driver update(Driver driver) {
         String query = "UPDATE drivers SET name = ?, "
-                + " license_number = ? WHERE driver_id = ? "
+                + " license_number = ?, login = ?, password = ? "
+                + "WHERE driver_id = ? "
                 + "AND is_delete = false";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, driver.getName());
             statement.setString(2, driver.getLicenceNumber());
-            statement.setLong(3, driver.getId());
+            statement.setString(3, driver.getLogin());
+            statement.setString(4, driver.getPassword());
+            statement.setLong(5, driver.getId());
             statement.executeUpdate();
             return driver;
         } catch (SQLException e) {
@@ -89,7 +95,7 @@ public class DriverJdbcImpl implements DriverDao {
         String query = "UPDATE drivers SET is_delete = ? "
                 + "WHERE driver_id =" + id;
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setBoolean(1, true);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -97,10 +103,31 @@ public class DriverJdbcImpl implements DriverDao {
         }
     }
 
+    @Override
+    public Optional<Driver> findByLogin(String login) {
+        String query = "SELECT * "
+                + "FROM drivers AS d "
+                + "WHERE  d.login = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, login);
+            ResultSet resultSet = statement.executeQuery();
+            Driver driver = null;
+            if (resultSet.next()) {
+                driver = createNewDriver(resultSet);
+            }
+            return Optional.ofNullable(driver);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't find by login " + login, e);
+        }
+    }
+
     private Driver createNewDriver(ResultSet resultSet) {
         try {
             Driver driver = new Driver(resultSet.getString("name"),
                     resultSet.getString("license_number"));
+            driver.setLogin(resultSet.getString("login"));
+            driver.setPassword(resultSet.getString("password"));
             driver.setId(resultSet.getObject(1, Long.class));
             return driver;
         } catch (SQLException e) {

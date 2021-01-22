@@ -5,7 +5,7 @@
     <title>Here you can see all your drivers</title>
 </head>
 <body>
-<h1>Here you can see all your drivers</h1>
+<h1>Here you can see all drivers</h1>
 <table border="1">
     <tr>
         <th>ID</th>
@@ -22,6 +22,27 @@
             </td>
             <td>
                 <c:out value="${driver.licenceNumber}"/>
+            </td>
+        </tr>
+    </c:forEach>
+</table>
+<table border="1">
+    <br><h1>Here you can see all the cars your drive</h1>
+    <tr>
+        <th>ID</th>
+        <th>Model</th>
+        <th>Manufacturer ID</th>
+    </tr>
+    <c:forEach var="car" items="${cars}">
+        <tr>
+            <td>
+                <c:out value="${car.id}"/>
+            </td>
+            <td>
+                <c:out value="${car.model}"/>
+            </td>
+            <td>
+                <c:out value="${car.manufacturer.id}"/>
             </td>
         </tr>
     </c:forEach>

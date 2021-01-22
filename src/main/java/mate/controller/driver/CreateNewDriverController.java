@@ -24,12 +24,18 @@ public class CreateNewDriverController extends HttpServlet {
             throws ServletException, IOException {
         String driverName = req.getParameter("driver_name");
         String licenseNumber = req.getParameter("license_number");
-        String driver_login = req.getParameter("driver_login");
-        String driver_password = req.getParameter("driver_password");
-        Driver driver = new Driver(driverName, licenseNumber);
-        driver.setLogin(driver_login);
-        driver.setPassword(driver_password);
-        driverService.create(driver);
-        resp.sendRedirect(req.getContextPath() + "/");
+        String driverLogin = req.getParameter("driver_login");
+        String driverPassword = req.getParameter("driver_password");
+        String repeatDriverPassword = req.getParameter("repeat_driver_password");
+        if (driverPassword.equals(repeatDriverPassword)) {
+            Driver driver = new Driver(driverName, licenseNumber);
+            driver.setLogin(driverLogin);
+            driver.setPassword(driverPassword);
+            driverService.create(driver);
+            resp.sendRedirect(req.getContextPath() + "/");
+        } else {
+            req.setAttribute("message", "Yore password and repeat password aren't the same.");
+            req.getRequestDispatcher("/WEB-INF/view/driver/create.jsp").forward(req, resp);
+        }
     }
 }
