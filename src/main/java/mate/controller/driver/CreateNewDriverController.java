@@ -34,7 +34,7 @@ public class CreateNewDriverController extends HttpServlet {
             driverService.create(driver);
             resp.sendRedirect(req.getContextPath() + "/");
         } else {
-            req.setAttribute("message", "Yore password and repeat password aren't the same.");
+            req.setAttribute("message", "Your password and repeat password aren't the same.");
             req.getRequestDispatcher("/WEB-INF/view/driver/create.jsp").forward(req, resp);
         }
     }
