@@ -49,7 +49,9 @@ public class CarJdbcImpl implements CarDao {
                 + "    m.manufacturer_country,"
                 + "    cd.driver_id,"
                 + "    d.name,"
-                + "    d.license_number "
+                + "    d.license_number, "
+                + "    d.login, "
+                + "    d.password "
                 + "FROM "
                 + "    cars AS c"
                 + "        LEFT JOIN"
@@ -68,7 +70,9 @@ public class CarJdbcImpl implements CarDao {
                 + "    m.manufacturer_country,"
                 + "    cd.driver_id,"
                 + "    d.name,"
-                + "    d.license_number "
+                + "    d.license_number, "
+                + "    d.login, "
+                + "    d.password "
                 + "FROM "
                 + "    cars AS c"
                 + "        RIGHT JOIN"
@@ -108,7 +112,9 @@ public class CarJdbcImpl implements CarDao {
                 + "    m.manufacturer_country,"
                 + "    cd.driver_id,"
                 + "    d.name,"
-                + "    d.license_number "
+                + "    d.license_number, "
+                + "    d.login, "
+                + "    d.password "
                 + "FROM "
                 + "    cars AS c"
                 + "        LEFT JOIN"
@@ -126,7 +132,9 @@ public class CarJdbcImpl implements CarDao {
                 + "    m.manufacturer_country,"
                 + "    cd.driver_id,"
                 + "    d.name,"
-                + "    d.license_number "
+                + "    d.license_number, "
+                + "    d.login, "
+                + "    d.password "
                 + "FROM "
                 + "    cars AS c"
                 + "        RIGHT JOIN"
@@ -203,7 +211,9 @@ public class CarJdbcImpl implements CarDao {
                 + "    m.manufacturer_country,"
                 + "    cd.driver_id,"
                 + "    d.name,"
-                + "    d.license_number "
+                + "    d.license_number, "
+                + "    d.login,"
+                + "    d.password "
                 + "FROM"
                 + "    cars AS c"
                 + "        JOIN"
@@ -276,6 +286,8 @@ public class CarJdbcImpl implements CarDao {
                 Driver driver = new Driver(resultSet.getString("name"),
                         resultSet.getString("license_number"));
                 driver.setId(driverId);
+                driver.setPassword(resultSet.getString("password"));
+                driver.setLogin(resultSet.getString("login"));
                 drivers.add(driver);
 
             }

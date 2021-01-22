@@ -11,5 +11,6 @@
 <br><a href="${pageContext.request.contextPath}/manufacturers/create">Creat new manufacturer</a>
 <br><a href="${pageContext.request.contextPath}/cars/create">Creat new car</a>
 <br><a href="${pageContext.request.contextPath}/cars/drivers/add">Add driver to car</a>
+<br><a href="${pageContext.request.contextPath}/drivers/my">Get my cars</a>
 </body>
 </html>
