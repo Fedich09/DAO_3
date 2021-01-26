@@ -5,7 +5,7 @@
     <title>Here you can see all your drivers</title>
 </head>
 <body>
-<h1>Here you can see all your drivers</h1>
+<h1>Here you can see all drivers</h1>
 <table border="1">
     <tr>
         <th>ID</th>
